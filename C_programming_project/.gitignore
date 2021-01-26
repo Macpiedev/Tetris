@@ -1,0 +1,10 @@
+# ignore all files
+/*
+
+# except those
+!README.md
+!.gitignore
+!/assets
+!/fonts
+!*.h
+!*.c
