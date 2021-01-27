@@ -16,4 +16,11 @@ Block blockTextures[7];
 void showBlocks();
 void moveAllBlocksLeft(Block* block);
 void moveAllBlocksRight(Block* block);
+void RotateBlock(Block* block);
+void spawnBlock(Block* block, int shape, int level);
+void destroyBlocksTextures();
+int createShape(Block* block, char shape[], bool isRotate);
+void chooseShape(Block* block, int Texture);
+void setBlockSize(Block* block);
+void putBlockIntoGrid(Block* block);
 #endif BLOCKSMANAGER_FUNCS
