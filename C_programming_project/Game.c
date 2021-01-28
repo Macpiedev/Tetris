@@ -190,7 +190,7 @@ void handleEvents(Block *block, int BlockSpeed, int level, int *rotateDelay)
 }
 
 
-void rendererFuncs(Block* currentBlock, int nextShape, int score, Text nextShapeText, Text Tetris, Text Author, Text ScoreText, Text ScorePoints, Text LevelText, Text  LevelNumberText)
+void rendererFuncs(Block* currentBlock, int nextShape, int score)
 {
 
 	Block* nextBlockTooltip = malloc(sizeof(Block));
@@ -213,13 +213,12 @@ void rendererFuncs(Block* currentBlock, int nextShape, int score, Text nextShape
 		if (nextBlockTooltip)
 		SDL_RenderCopy(renderer, nextBlockTooltip->blockTexture, NULL, &nextBlockTooltip->cordinates[i]);
 	}
-	SDL_RenderCopy(renderer, nextShapeText.textTexture, NULL, &nextShapeText.position);
-	SDL_RenderCopy(renderer, Tetris.textTexture, NULL, &Tetris.position);
-	SDL_RenderCopy(renderer, Author.textTexture, NULL, &Author.position);
-	SDL_RenderCopy(renderer, ScoreText.textTexture, NULL, &ScoreText.position);
-	SDL_RenderCopy(renderer, ScorePoints.textTexture, NULL, &ScorePoints.position);
-	SDL_RenderCopy(renderer, LevelText.textTexture, NULL, &LevelText.position);
-	SDL_RenderCopy(renderer, LevelNumberText.textTexture, NULL, &LevelNumberText.position);
+
+	for (int i = 0; i < 7; i++)
+	{
+		SDL_RenderCopy(renderer, gameTexts[i].textTexture, NULL, &gameTexts[i].position);
+	}
+
 	showBlocks();
 	SDL_RenderPresent(renderer);
 	free(nextBlockTooltip);
@@ -309,6 +308,11 @@ int levelUp(int score)
 
 void exitGame()
 {
+	TTF_CloseFont(GameFont);
+	TTF_CloseFont(AuthorFont);
+	TTF_CloseFont(GameFont2);
+	TTF_CloseFont(GameName);
+	destroyTextsTextures();
 	destroyBlocksTextures();
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
@@ -323,10 +327,8 @@ int startGame(const int frameDelay)
 
 	isRunning = 1;
 
-	unsigned int BlockSpeed = FPS/2;
-	unsigned int Level = 1;
 	int whenMove = 0;
-	unsigned int score = 0, newscore = 0;
+	unsigned int score = 0, newscore = 0, BlockSpeed = FPS / 2, Level = 1; 
 
 	Uint32 frameStart;
 	int frameTime;
@@ -341,22 +343,6 @@ int startGame(const int frameDelay)
 	spawnBlock(currentBlock, nextShape, Level);
 	nextShape = rand() % 7;
 
-	TTF_Font* GameFont, * AuthorFont, * GameName;
-	GameFont = TTF_OpenFont("fonts/Bangers-Regular.ttf", 35);
-	AuthorFont = TTF_OpenFont("fonts/Bangers-Regular.ttf", 14);
-	GameName = TTF_OpenFont("fonts/Bangers-Regular.ttf", 50);
-
-	Text nextShapeText, Author, Tetris, ScoreText, ScorePoints, LevelText, LevelNumberText;
-	nextShapeText = createText(GameFont, "Next Shape", TOP_LEFT_X + 13 * BLOCK_SIZE - 5, TOP_LEFT_Y + 2 * BLOCK_SIZE + BLOCK_SIZE / 2);
-	Author = createText(AuthorFont, "Created by Maciej Pietrewicz", 10, 700);
-	Tetris = createText(GameName, "Tetris", TOP_LEFT_X + 3 * BLOCK_SIZE, TOP_LEFT_Y - 2 * BLOCK_SIZE);
-
-	ScoreText = createText(GameFont, "Score", TOP_LEFT_X + 14 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE + BLOCK_SIZE / 2);
-
-	LevelText = createText(GameName, "Level", TOP_LEFT_X - 5 * BLOCK_SIZE, TOP_LEFT_Y + 5 * BLOCK_SIZE);
-	ScorePoints = createText(GameFont, "0", TOP_LEFT_X + 15 * BLOCK_SIZE - 5, TOP_LEFT_Y + 12 * BLOCK_SIZE + BLOCK_SIZE / 2 - 10);
-	LevelNumberText = createText(GameName, "1", TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 7 * BLOCK_SIZE - 10);
-	
 	char StrScore[100], StrLevel[10];
 	while (isRunning)
 	{
@@ -374,11 +360,10 @@ int startGame(const int frameDelay)
 		if (currentBlock)
 		if (whenMove == BlockSpeed - currentBlock->fallSpeed)
 		{
-
 				if (checkFreeSpaces(1, currentBlock, 0, 1) && checkFreeSpaces(2, currentBlock, 0, 1) && checkFreeSpaces(3, currentBlock, 0, 1) && checkFreeSpaces(4, currentBlock, 0, 1))
 				{
 
-					Fall(currentBlock);
+					moveBlock(currentBlock);
 					whenMove = 0;
 				}
 				else
@@ -395,10 +380,10 @@ int startGame(const int frameDelay)
 						score = newscore;
 						sprintf_s(StrScore, 100, "%d", score);
 						sprintf_s(StrLevel, 10, "%d", Level);
-						SDL_DestroyTexture(ScorePoints.textTexture);
-						SDL_DestroyTexture(LevelNumberText.textTexture);
-						ScorePoints = createText(GameFont, StrScore, TOP_LEFT_X + 15 * BLOCK_SIZE - 5, TOP_LEFT_Y + 12 * BLOCK_SIZE + BLOCK_SIZE / 2 - 10);
-						LevelNumberText = createText(GameName, StrLevel, TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 7 * BLOCK_SIZE - 10);
+						SDL_DestroyTexture(gameTexts[5].textTexture);
+						SDL_DestroyTexture(gameTexts[6].textTexture);
+						gameTexts[5] = createText(GameFont, StrScore, TOP_LEFT_X + 15 * BLOCK_SIZE - 5, TOP_LEFT_Y + 12 * BLOCK_SIZE + BLOCK_SIZE / 2 - 10);
+						gameTexts[6] = createText(GameName, StrLevel, TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 7 * BLOCK_SIZE - 10);
 					}
 				}
 		}
@@ -418,15 +403,15 @@ int startGame(const int frameDelay)
 				score = newscore;
 				sprintf_s(StrScore, 100, "%d", score);
 				sprintf_s(StrLevel, 10, "%d", Level);
-				SDL_DestroyTexture(ScorePoints.textTexture);
-				SDL_DestroyTexture(LevelNumberText.textTexture);
-				ScorePoints = createText(GameFont, StrScore, TOP_LEFT_X + 15 * BLOCK_SIZE - 5, TOP_LEFT_Y + 12 * BLOCK_SIZE + BLOCK_SIZE / 2 - 10);
-				LevelNumberText = createText(GameName, StrLevel, TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 7 * BLOCK_SIZE - 10);
+				SDL_DestroyTexture(gameTexts[5].textTexture);
+				SDL_DestroyTexture(gameTexts[6].textTexture);
+				gameTexts[5] = createText(GameFont, StrScore, TOP_LEFT_X + 15 * BLOCK_SIZE - 5, TOP_LEFT_Y + 12 * BLOCK_SIZE + BLOCK_SIZE / 2 - 10);
+				gameTexts[6] = createText(GameName, StrLevel, TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 7 * BLOCK_SIZE - 10);
 			}
 		}
 		
 	
-		rendererFuncs(currentBlock, nextShape, score, nextShapeText, Tetris, Author,ScoreText,ScorePoints, LevelText, LevelNumberText);
+		rendererFuncs(currentBlock, nextShape, score);
 		rotateDelay[0] += 1;
 		
 
@@ -437,9 +422,6 @@ int startGame(const int frameDelay)
 	}
 	free(rotateDelay);
 	free(currentBlock);
-	TTF_CloseFont(GameFont);
-	TTF_CloseFont(AuthorFont);
-	TTF_CloseFont(GameName);
 
 	return score;
 }
@@ -454,14 +436,7 @@ void startMenu()
 	SDL_Event e;
 	unsigned int highestScore=0, score;
 	bool quitGame=true;
-	Text HighestScoreText, HighestScoreNumber, Tetris, howToStart, Author;
-	TTF_Font* GameFont, *AuthorFont;
-	GameFont = TTF_OpenFont("fonts/Bangers-Regular.ttf", 60);
-	AuthorFont = TTF_OpenFont("fonts/Bangers-Regular.ttf", 14);
-	Author = createText(AuthorFont, "Created by Maciej Pietrewicz", 10, 700);
-	Tetris = createText(GameFont, "Tetris", TOP_LEFT_X + 2 * BLOCK_SIZE, TOP_LEFT_Y + BLOCK_SIZE);
-	howToStart = createText(GameFont, "Press S to start", TOP_LEFT_X - 2 * BLOCK_SIZE, TOP_LEFT_Y + 6*BLOCK_SIZE);
-	HighestScoreText = createText(GameFont, "The Highest Score :", TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y +10 * BLOCK_SIZE);
+	loadTextsTextures();
 	
 	FILE* fptr;
 	fopen_s(&fptr,"highestScore.txt", "r");
@@ -471,18 +446,18 @@ void startMenu()
 	if(fptr)
 		fclose(fptr);
 	sprintf_s(strHS, 100, "%d", highestScore);
-	HighestScoreNumber = createText(GameFont, strHS, TOP_LEFT_X + 10 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE);
+	menuTexts[4] = createText(GameFont2, strHS, TOP_LEFT_X + 10 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE);
+
 	while (quitGame) {
 		frameStart = SDL_GetTicks();
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, Author.textTexture, NULL, &Author.position);
-		SDL_RenderCopy(renderer, Tetris.textTexture, NULL, &Tetris.position);
-		SDL_RenderCopy(renderer, howToStart.textTexture, NULL, &howToStart.position);
-		SDL_RenderCopy(renderer, HighestScoreText.textTexture, NULL, &HighestScoreText.position);
-		SDL_RenderCopy(renderer, HighestScoreNumber.textTexture, NULL, &HighestScoreNumber.position);
-		SDL_RenderPresent(renderer);
-
+		for (int i = 0; i < 5; i++)
+		{
+			SDL_RenderCopy(renderer, menuTexts[i].textTexture, NULL, &menuTexts[i].position);
+		}
+			SDL_RenderPresent(renderer);
+		
 		while (SDL_PollEvent(&e) != 0)
 		{
 			if (e.type == SDL_KEYDOWN) {
@@ -496,9 +471,9 @@ void startMenu()
 							fprintf_s(fptr, "%d", highestScore);
 							fclose(fptr);
 						}
-						SDL_DestroyTexture(HighestScoreNumber.textTexture);
+						SDL_DestroyTexture(menuTexts[4].textTexture);
 						sprintf_s(strHS, 100, "%d", highestScore);
-						HighestScoreNumber = createText(GameFont, strHS, TOP_LEFT_X + 9 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE);
+						menuTexts[4] = createText(GameFont2, strHS, TOP_LEFT_X + 10 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE);
 					}
 				}
 			}
@@ -514,7 +489,5 @@ void startMenu()
 		if (frameDelay > frameTime)
 			SDL_Delay(frameDelay - frameTime);
 	}
-	TTF_CloseFont(GameFont);
-	TTF_CloseFont(AuthorFont);
 
 }

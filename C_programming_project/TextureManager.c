@@ -28,6 +28,16 @@ void loadBlocksTextures()
 	blockTextures[5].blockTexture = loadTexture("assets/ZBlock.bmp");
 }
 
+void destroyBlocksTextures()
+{
+	for (int i = 0; i < 7; i++)
+	{
+		SDL_DestroyTexture(blockTextures[i].blockTexture);
+	}
+}
+
+
+
 
 Text createText(TTF_Font* GameFont, const char* text, int x, int y)
 {
@@ -49,3 +59,42 @@ Text createText(TTF_Font* GameFont, const char* text, int x, int y)
 
 	return textTexture;
 }
+
+
+
+
+
+void loadTextsTextures()
+{
+
+	GameFont2 = TTF_OpenFont("fonts/Bangers-Regular.ttf", 60);
+	AuthorFont = TTF_OpenFont("fonts/Bangers-Regular.ttf", 14);
+	GameFont = TTF_OpenFont("fonts/Bangers-Regular.ttf", 35);
+	GameName = TTF_OpenFont("fonts/Bangers-Regular.ttf", 50);
+
+	gameTexts[0] = createText(GameFont, "Next Shape", TOP_LEFT_X + 13 * BLOCK_SIZE - 5, TOP_LEFT_Y + 2 * BLOCK_SIZE + BLOCK_SIZE / 2);
+	gameTexts[1] = createText(AuthorFont, "Created by Maciej Pietrewicz", 10, 700);
+	gameTexts[2] = createText(GameName, "Tetris", TOP_LEFT_X + 3 * BLOCK_SIZE, TOP_LEFT_Y - 2 * BLOCK_SIZE);
+	gameTexts[3] = createText(GameFont, "Score", TOP_LEFT_X + 14 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE + BLOCK_SIZE / 2);
+	gameTexts[4] = createText(GameName, "Level", TOP_LEFT_X - 5 * BLOCK_SIZE, TOP_LEFT_Y + 5 * BLOCK_SIZE);
+	gameTexts[5] = createText(GameFont, "0", TOP_LEFT_X + 15 * BLOCK_SIZE - 5, TOP_LEFT_Y + 12 * BLOCK_SIZE + BLOCK_SIZE / 2 - 10);
+	gameTexts[6] = createText(GameName, "1", TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 7 * BLOCK_SIZE - 10);
+
+	menuTexts[0] = createText(AuthorFont, "Created by Maciej Pietrewicz", 10, 700);
+	menuTexts[1] = createText(GameFont2, "Tetris", TOP_LEFT_X + 2 * BLOCK_SIZE, TOP_LEFT_Y + 2*BLOCK_SIZE);
+	menuTexts[2] = createText(GameFont2, "Press S to start", TOP_LEFT_X - 2 * BLOCK_SIZE, TOP_LEFT_Y + 6 * BLOCK_SIZE);
+	menuTexts[3] = createText(GameFont2, "The Highest Score :", TOP_LEFT_X - 4 * BLOCK_SIZE, TOP_LEFT_Y + 10 * BLOCK_SIZE);
+}
+
+void destroyTextsTextures()
+{
+	for (int i = 0; i < 7; i++)
+	{
+		SDL_DestroyTexture(gameTexts[i].textTexture);
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		SDL_DestroyTexture(menuTexts[i].textTexture);
+	}
+}
+

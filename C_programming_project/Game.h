@@ -21,28 +21,23 @@
 #define COLUMNS 10
 #define BLOCK_SIZE 30
 
-void initWindow();
-int startGame(const int frameDelay);
-void exitGame();
+
 int cordinatesToGridX(int x);
 int cordinatesToGridY(int y);
 int gridXtoCordinates(int x);
 int gridYtoCordinates(int y);
-bool emptySpace(int x, int y);
+
+void initWindow();
+void exitGame();
+void startMenu();
 
 SDL_Window* window;
 SDL_Renderer* renderer;
 
+bool emptySpace(int x, int y);
 bool isRunning;
-
 
 int grid[20][10];
 
-typedef struct Text
-{
-	SDL_Texture *textTexture;
-	SDL_Rect position;
-}Text;
-
-extern char S2[], S1[], I1[], I2[], I3[], Z1[], Z2[], O[], J1[], J2[], J3[], J4[], L1[], L2[], L3[], L4[], T1[], T2[], T3[], T4[];
+char S2[], S1[], I1[], I2[], I3[], Z1[], Z2[], O[], J1[], J2[], J3[], J4[], L1[], L2[], L3[], L4[], T1[], T2[], T3[], T4[];
 #endif

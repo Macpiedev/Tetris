@@ -92,17 +92,9 @@ void putBlockIntoGrid(Block* block)
 
 }
 
-void destroyBlocksTextures()
-{
-	for (int i = 0; i < 7; i++)
-	{
-		SDL_DestroyTexture(blockTextures[i].blockTexture);
-	}
-}
 
 
-
-void Fall(Block* block)
+void moveBlock(Block* block)
 {
 	for (int i = 0; i < 4; i++)
 	{
