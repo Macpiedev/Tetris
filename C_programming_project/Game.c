@@ -111,7 +111,7 @@ bool checkIfLost()
 
 
 
-bool checkFreeSpaces(int number, Block *block, int m, int t)
+bool checkEmptySpaces(int number, Block *block, int m, int t)
 {
 
 
@@ -155,14 +155,14 @@ void handleEvents(Block *block, int BlockSpeed, int level, int *rotateDelay)
 			if (e.key.keysym.sym == SDLK_LEFT && block->cordinates[0].x > TOP_LEFT_X  && block->cordinates[1].x > TOP_LEFT_X  && block->cordinates[2].x > TOP_LEFT_X && block->cordinates[3].x > TOP_LEFT_X)
 			{
 	
-			if (checkFreeSpaces(1, block, -1, 0) && checkFreeSpaces(2, block, -1, 0) && checkFreeSpaces(3, block, -1, 0) && checkFreeSpaces(4, block, -1, 0))
+			if (checkEmptySpaces(1, block, -1, 0) && checkEmptySpaces(2, block, -1, 0) && checkEmptySpaces(3, block, -1, 0) && checkEmptySpaces(4, block, -1, 0))
 					moveAllBlocksLeft(block);
 	
 			}
 			 else if (e.key.keysym.sym == SDLK_RIGHT && block->cordinates[3].x < TOP_LEFT_X + (COLUMNS - 1) * BLOCK_SIZE && block->cordinates[2].x < TOP_LEFT_X + (COLUMNS - 1) * BLOCK_SIZE && block->cordinates[1].x < TOP_LEFT_X + (COLUMNS - 1) * BLOCK_SIZE && block->cordinates[0].x < TOP_LEFT_X + (COLUMNS - 1) * BLOCK_SIZE)
 			{
 				
-				if (checkFreeSpaces(1, block, 1, 0) && checkFreeSpaces(2, block, 1, 0) && checkFreeSpaces(3, block, 1, 0) && checkFreeSpaces(4, block, 1, 0))
+				if (checkEmptySpaces(1, block, 1, 0) && checkEmptySpaces(2, block, 1, 0) && checkEmptySpaces(3, block, 1, 0) && checkEmptySpaces(4, block, 1, 0))
 					moveAllBlocksRight(block);
 
 			
@@ -360,7 +360,7 @@ int startGame(const int frameDelay)
 		if (currentBlock)
 		if (whenMove == BlockSpeed - currentBlock->fallSpeed)
 		{
-				if (checkFreeSpaces(1, currentBlock, 0, 1) && checkFreeSpaces(2, currentBlock, 0, 1) && checkFreeSpaces(3, currentBlock, 0, 1) && checkFreeSpaces(4, currentBlock, 0, 1))
+				if (checkEmptySpaces(1, currentBlock, 0, 1) && checkEmptySpaces(2, currentBlock, 0, 1) && checkEmptySpaces(3, currentBlock, 0, 1) && checkEmptySpaces(4, currentBlock, 0, 1))
 				{
 
 					moveBlock(currentBlock);
