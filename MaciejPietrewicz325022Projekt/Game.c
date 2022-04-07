@@ -296,15 +296,14 @@ int levelUp(int score)
 		return 1;
 	else if (score > 80 && score <=200)
 		return 2;
-	else if (score > 200 && score <=600)
+	else if (score > 200 && score <600)
 		return 3;
 	else if (score > 600 && score <=1200)
 		return 4;
-	else
+	else if (score > 1200 )
 		return 5;
+	
 }
-
-
 
 
 void exitGame()
@@ -437,7 +436,7 @@ void startMenu()
 	SDL_Event e;
 	unsigned int highestScore=0, score;
 	bool quitGame=true;
-	loadTextsTextures();	
+	loadTextsTextures();
 	
 	FILE* fptr;
 	fopen_s(&fptr,"TheHighestScore.txt", "r");
